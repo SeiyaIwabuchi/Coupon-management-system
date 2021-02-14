@@ -1,12 +1,12 @@
-import { Box } from '@material-ui/core';
 import React from 'react';
+import { BrowserRouter as Router, } from 'react-router-dom';
 import Common from './Common';
 
 function App() {
 	return (
-		<Box>
-			<Common/>
-		</Box>
+		<Router>
+			<Common />
+		</Router>
 	);
 }
 
