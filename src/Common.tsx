@@ -13,6 +13,8 @@ import Settings from "./Settings";
 import Login from "./Login";
 import CreateNew from "./CreateNew";
 import NoMatch from "./NoMatch";
+import SelectDest from "./SelectDest";
+
 
 //親要素から受け取るプロパティ
 interface ICommonProps {
@@ -68,6 +70,9 @@ export default function Common(props: ICommonProps) {
                     </Route>
                     <Route path="/login">
                         <Login setAppbar={setAppbar}/>
+                    </Route>
+                    <Route path="/selectdest">
+                        <SelectDest setAppbar={setAppbar}/>
                     </Route>
                     <Route path="*">
                         <NoMatch setAppbar={setAppbar} />
