@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, CardMedia, Fab, FormControl, IconButton, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import CheckIcon from '@material-ui/icons/Check';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -37,6 +37,10 @@ interface ICreateNewProps {
     };
 }
 
+interface ILocatoin{
+    destName:string;
+}
+
 
 export default function CreateNew(props: ICreateNewProps) {
 
@@ -45,6 +49,7 @@ export default function CreateNew(props: ICreateNewProps) {
 
 
     let history = useHistory();
+    let location = useLocation<ILocatoin>();
 
 
     useEffect(() => {
@@ -86,8 +91,8 @@ export default function CreateNew(props: ICreateNewProps) {
                         <MenuItem value={2}>回数クーポン</MenuItem>
                     </Select>
                 </FormControl>
-                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>配布先選択</Button>
-                <Typography style={{ marginTop: "20px", width: "100%" }}>配布先名表示</Typography>
+                <Button component={Link} to="/selectdest" color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>配布先選択</Button>
+                <Typography style={{ marginTop: "20px", width: "100%" }}>{location.state.destName}</Typography>
                 <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>期限日選択</Button>
                 <Typography style={{ marginTop: "20px", width: "100%" }}>期限日表示</Typography>
                 <TextField variant="filled" label="使用可能回数" placeholder="使用可能回数" type="number" required style={{ marginTop: "20px", width: "100%" }} />
