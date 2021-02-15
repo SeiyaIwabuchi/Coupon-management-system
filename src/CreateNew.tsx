@@ -59,7 +59,7 @@ export default function CreateNew(props: ICreateNewProps) {
                 color="inherit"
                 aria-label="goback"
                 style={{ flexGrow: 1 }}
-                onClick={() => { history.goBack() }}
+                onClick={() => { history.replace("/created") }}
             >
                 <CloseIcon />
             </IconButton>
@@ -92,7 +92,7 @@ export default function CreateNew(props: ICreateNewProps) {
                     </Select>
                 </FormControl>
                 <Button component={Link} to="/selectdest" color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>配布先選択</Button>
-                <Typography style={{ marginTop: "20px", width: "100%" }}>{location.state.destName}</Typography>
+                <Typography style={{ marginTop: "20px", width: "100%" }}>{location.state!=undefined?location.state.destName:"配布先名"}</Typography>
                 <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>期限日選択</Button>
                 <Typography style={{ marginTop: "20px", width: "100%" }}>期限日表示</Typography>
                 <TextField variant="filled" label="使用可能回数" placeholder="使用可能回数" type="number" required style={{ marginTop: "20px", width: "100%" }} />
