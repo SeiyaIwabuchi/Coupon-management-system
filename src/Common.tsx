@@ -1,5 +1,4 @@
 
-import classes from "*.module.css";
 import { AppBar, Toolbar, IconButton, Typography, Button, Box, BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from "react";
@@ -14,6 +13,7 @@ import Login from "./Login";
 import CreateNew from "./CreateNew";
 import NoMatch from "./NoMatch";
 import SelectDest from "./SelectDest";
+import Statistics from "./Statistics";
 
 
 //親要素から受け取るプロパティ
@@ -34,7 +34,6 @@ export default function Common(props: ICommonProps) {
     );
     const [centerLabel, setcenterLabel] = useState("たいぽぐらふぃ");
     const [rightIconButton, setrightIconButton] = useState(<Button color="inherit" style={{ flexGrow: 1 }}>Login</Button>);
-    const [navNumber, setnavNumber] = useState(0);
 
 
     let setAppbar = { leftIcon: setleftIconButton, centerTitle: setcenterLabel, rightIcon: setrightIconButton };
@@ -73,6 +72,9 @@ export default function Common(props: ICommonProps) {
                     </Route>
                     <Route path="/selectdest">
                         <SelectDest setAppbar={setAppbar}/>
+                    </Route>
+                    <Route path="/statistics">
+                        <Statistics setAppbar={setAppbar}/>
                     </Route>
                     <Route path="*">
                         <NoMatch setAppbar={setAppbar} />
