@@ -5,6 +5,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import CheckIcon from '@material-ui/icons/Check';
 import AddIcon from '@material-ui/icons/Add';
 
+
 function SelectImage() {
     const [filePath, sfilePath] = useState("/none.png");
     return (
@@ -37,8 +38,8 @@ interface ICreateNewProps {
     };
 }
 
-interface ILocatoin{
-    destName:string;
+interface ILocatoin {
+    destName: string;
 }
 
 
@@ -80,7 +81,7 @@ export default function CreateNew(props: ICreateNewProps) {
 
 
     return (
-        <Box style={{ height:"800px",display: "flex", flexDirection: "column", alignItems: "center"}}>
+        <Box style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: "70px" }}>
             <Box style={{ width: "90vw", display: "flex", flexDirection: "column", alignItems: "center", marginTop: "3vh" }}>
                 <SelectImage />
                 <TextField variant="filled" label="クーポン名" placeholder="クーポン名" required style={{ marginTop: "20px", width: "100%" }} />
@@ -92,9 +93,8 @@ export default function CreateNew(props: ICreateNewProps) {
                     </Select>
                 </FormControl>
                 <Button component={Link} to="/selectdest" color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>配布先選択</Button>
-                <Typography style={{ marginTop: "20px", width: "100%" }}>{location.state!=undefined?location.state.destName:"配布先名"}</Typography>
-                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>期限日選択</Button>
-                <Typography style={{ marginTop: "20px", width: "100%" }}>期限日表示</Typography>
+                <Typography style={{ marginTop: "20px", width: "100%" }}>{location.state != undefined ? location.state.destName : "配布先名"}</Typography>
+                <TextField label="期限日" type="date" InputLabelProps={{shrink:true}} style={{ marginTop: "20px", width: "100%" }}/>
                 <TextField variant="filled" label="使用可能回数" placeholder="使用可能回数" type="number" required style={{ marginTop: "20px", width: "100%" }} />
             </Box>
         </Box>
