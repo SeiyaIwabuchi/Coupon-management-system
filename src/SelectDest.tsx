@@ -62,7 +62,7 @@ export default function SelectDest(props: ISelectDestProps) {
 
 
     return (
-        <Box style={{ height: "150%", display: "flex",flexDirection:"column" }}>
+        <Box style={{ display: "flex",flexDirection:"column",paddingBottom:"70px" }}>
             <FormControl variant="filled" style={{ marginTop:"10px",width: "100%"}}>
                 <Select value={destk} onChange={event => { sdestk(event.target.value) }}>
                     <MenuItem value={0}>個人</MenuItem>
@@ -73,7 +73,7 @@ export default function SelectDest(props: ISelectDestProps) {
                 {
                     (()=>{
                         let dests:JSX.Element[] = [];
-                        for(let i=0;i<10;i++){
+                        for(let i=0;i<100;i++){
                             dests.push(<DestListItem destName="なんとかさん" />);
                         }
                         return dests;
