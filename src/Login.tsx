@@ -1,6 +1,6 @@
 import { Typography, Box, TextField, Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 
 interface ILoginProps{
@@ -54,6 +54,8 @@ export default function Login(props:ILoginProps) {
                 <TextField value={loginID} onChange={event=>{sLoginID(event.target.value)}} variant="filled" placeholder="ログインID" label="ログインID" style={{ flexGrow: 2 }} />
                 <TextField value={passwd} onChange={event=>{sPasswd(event.target.value)}} variant="filled" placeholder="パスワード" label="パスワード" type="password" style={{ flexGrow: 2 }} />
                 <Button onClick={loginButtonHandle} variant="contained" color="primary">ログイン</Button>
+                <div style={{ flexGrow: 1 }}/>
+                <Button variant="contained" color="primary" component={Link} to="/user_registration">新規登録</Button>
                 <div style={{ flexGrow: 1 }}/>
             </Box>
         </Box>
