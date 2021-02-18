@@ -14,6 +14,7 @@ import CreateNew from "./CreateNew";
 import NoMatch from "./NoMatch";
 import SelectDest from "./SelectDest";
 import Statistics from "./Statistics";
+import NewUserRegistration from "./NewUserRegistration";
 
 
 //親要素から受け取るプロパティ
@@ -71,10 +72,13 @@ export default function Common(props: ICommonProps) {
                         <Login setAppbar={setAppbar}/>
                     </Route>
                     <Route path="/selectdest">
-                        <SelectDest setAppbar={setAppbar}/>
+                    {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <SelectDest setAppbar={setAppbar}/>}
                     </Route>
                     <Route path="/statistics">
-                        <Statistics setAppbar={setAppbar}/>
+                        {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <Statistics setAppbar={setAppbar}/>}
+                    </Route>
+                    <Route path="/user_registration">
+                        <NewUserRegistration setAppbar={setAppbar}/>
                     </Route>
                     <Route path="*">
                         <NoMatch setAppbar={setAppbar} />
