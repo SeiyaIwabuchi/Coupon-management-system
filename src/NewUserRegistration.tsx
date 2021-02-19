@@ -53,7 +53,7 @@ export default function NewUserRegistration(props:INewUserRegistrationProps) {
                 </Typography>
                 <TextField value={loginID} onChange={event=>{sLoginID(event.target.value)}} variant="filled" placeholder="ログインID" label="ログインID" style={{ flexGrow: 2 }} />
                 <TextField value={passwd} onChange={event=>{sPasswd(event.target.value)}} variant="filled" placeholder="パスワード" label="パスワード" type="password" style={{ flexGrow: 2 }} />
-                <Button variant="contained" color="primary" component={Link} to="login">登録</Button>
+                <Button variant="contained" color="primary" onClick={()=>{localStorage.setItem("uid","114514");history.push("/coupon");}}>登録</Button>
                 <div style={{ flexGrow: 1 }}/>
             </Box>
         </Box>
