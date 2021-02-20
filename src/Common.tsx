@@ -54,28 +54,28 @@ export default function Common(props: ICommonProps) {
             <Box style={{ marginTop: "56px", height: window.innerHeight - (58 * 2.1) }}>
                 <Switch>
                     <Route exact path="/">
-                        {localStorage.getItem("uid") == null ? <Redirect to="/login" /> : <Redirect to="/Coupon" />}
+                        {localStorage.getItem("sid") == null ? <Redirect to="/login" /> : <Redirect to="/Coupon" />}
                     </Route>
                     <Route path="/coupon">
-                        {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <Coupon setAppbar={setAppbar} />}
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Coupon setAppbar={setAppbar} />}
                     </Route>
                     <Route path="/created">
-                        {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <Created setAppbar={setAppbar} />}
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Created setAppbar={setAppbar} />}
                     </Route>
                     <Route path="/settings">
-                        {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <Settings setAppbar={setAppbar} />}
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Settings setAppbar={setAppbar} />}
                     </Route>
                     <Route path="/createnew">
-                        {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <CreateNew setAppbar={setAppbar} />}
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <CreateNew setAppbar={setAppbar} />}
                     </Route>
                     <Route path="/login">
                         <Login setAppbar={setAppbar}/>
                     </Route>
                     <Route path="/selectdest">
-                    {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <SelectDest setAppbar={setAppbar}/>}
+                    {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <SelectDest setAppbar={setAppbar}/>}
                     </Route>
                     <Route path="/statistics">
-                        {localStorage.getItem("uid") == null ? <Redirect to="/Login" /> : <Statistics setAppbar={setAppbar}/>}
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Statistics setAppbar={setAppbar}/>}
                     </Route>
                     <Route path="/user_registration">
                         <NewUserRegistration setAppbar={setAppbar}/>
