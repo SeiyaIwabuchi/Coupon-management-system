@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, IconButton, Link, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
-import dummyUsers from "./data/dummy/users";
 import User from "./data/model/User";
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 
 interface IUserListItemProps {
-    id: number;
-    name: string;
+    user:User;
+    handleDeleteItem:() => void;
 }
 function UserListItem(props: IUserListItemProps) {
 
@@ -21,14 +20,12 @@ function UserListItem(props: IUserListItemProps) {
 
     return (
         <ListItem>
-            <ListItemText primary={`${props.name}`} />
+            <ListItemText primary={`${props.user.user_name}`} />
             <ListItemSecondaryAction>
                 <IconButton
                     edge="end"
                     aria-label="delete"
-                    onClick={() => {
-                        //削除(props.id)
-                    }}
+                    onClick={() => props.handleDeleteItem()}
                 >
                     <DeleteIcon />
                 </IconButton>
@@ -37,6 +34,11 @@ function UserListItem(props: IUserListItemProps) {
     );
 }
 
+interface ILocation{
+    group_name:string;
+    group_id:number;
+    group_users:User[];
+}
 
 interface ISelectUserProps {
     setAppbar: {
@@ -49,6 +51,10 @@ interface ISelectUserProps {
 
 export default function NewGroup(props: ISelectUserProps) {
     const history = useHistory();
+    const location = useLocation<ILocation>();
+    const [group_name,s_group_name] = useState("");
+    const [group_id,s_group_id] = useState(-1);
+    const [users,s_users] = useState<User[]>([]);
     useEffect(() => {
         props.setAppbar.leftIcon(
             <IconButton
@@ -61,7 +67,7 @@ export default function NewGroup(props: ISelectUserProps) {
                 <CloseIcon />
             </IconButton>
         );
-        props.setAppbar.centerTitle("グループ作成");
+        //props.setAppbar.centerTitle("");
         props.setAppbar.rightIcon(
             <IconButton
                 edge="end"
@@ -73,17 +79,30 @@ export default function NewGroup(props: ISelectUserProps) {
                 <CheckIcon />
             </IconButton>
         );
+        s_group_name(location.state.group_name);
+        s_group_id(location.state.group_id);
+        s_users(location.state.group_users);
     }, []);
     return (
         <Box style={{ display: "flex", justifyContent: "center", paddingBottom: "70px" }}>
             <Box style={{ width: "90vw", display: "flex", flexDirection: "column", alignItems: "center", marginTop: "3vh" }}>
-                <TextField variant="filled" label="グループ名" placeholder="グループ名" required style={{ marginTop: "20px", width: "100%" }} />
+                <TextField 
+                variant="filled" 
+                label="グループ名" 
+                placeholder="グループ名" 
+                required style={{ marginTop: "20px", width: "100%" }} 
+                value={group_name}
+                onChange={(event)=>{s_group_name(event.target.value)}}
+                />
                 <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} />
                 <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>ユーザ追加</Button>
                 <List style={{ marginTop: "20px", width: "100%" }}>
                     {
-                        dummyUsers.map((user: User) => {
-                            return <UserListItem id={user.user_id} name={user.user_name} />
+                        users.map((user: User) => {
+                            return <UserListItem user={user}  handleDeleteItem={()=>{
+                                console.log(users.filter(u => u != user));
+                                s_users(users.filter(u => u != user));
+                            }}/>
                         })
                     }
                 </List>
