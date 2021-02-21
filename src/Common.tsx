@@ -10,12 +10,13 @@ import Coupon from "./Coupon";
 import Created from "./Created";
 import Settings from "./Settings";
 import Login from "./Login";
-import CreateNew from "./CreateNew";
+import CreateNew from "./CreateNewCoupon";
 import NoMatch from "./NoMatch";
 import SelectDest from "./SelectDest";
 import Statistics from "./Statistics";
 import NewUserRegistration from "./NewUserRegistration";
-import SelectUser from "./SelectUser";
+import NewGroup from "./NewGroup";
+import GroupManagement from "./GroupManagement";
 
 
 //親要素から受け取るプロパティ
@@ -78,8 +79,11 @@ export default function Common(props: ICommonProps) {
                     <Route path="/statistics">
                         {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Statistics setAppbar={setAppbar}/>}
                     </Route>
-                    <Route path="/select_user">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <SelectUser setAppbar={setAppbar}/>}
+                    <Route path="/new_group">
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <NewGroup setAppbar={setAppbar}/>}
+                    </Route>
+                    <Route path="/group_management">
+                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <GroupManagement setAppbar={setAppbar}/>}
                     </Route>
                     <Route path="/user_registration">
                         <NewUserRegistration setAppbar={setAppbar}/>
