@@ -7,6 +7,13 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from 'react-router-dom';
 
+function CreateNewUsers(oldUsers:User[]) : User[]{
+    let newUsers:User[] = [];
+    oldUsers.forEach((user)=>{
+        newUsers.push(new User(user.user_id,user.user_name));
+    });
+    return newUsers;
+}
 
 interface IUserListItemProps {
     user:User;
@@ -55,6 +62,20 @@ export default function NewGroup(props: ISelectUserProps) {
     const [group_name,s_group_name] = useState("");
     const [group_id,s_group_id] = useState(-1);
     const [users,s_users] = useState<User[]>([]);
+    const [inputUserId,s_inputUserId] = useState("");
+    const [userId,s_userId] = useState(-1);
+    const handleChaengeUserIdInput = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
+        s_inputUserId(event.target.value);
+        await fetch(`http://127.0.0.1:31354/user?sid=${localStorage.getItem("sid")}&login_id=${event.target.value}`)
+        .then(res => res.json())
+        .then((resData) => {console.log(resData);s_userId(resData.userId)})
+    }; 
+    const handleUseAdd = () =>{
+        const newUsers = CreateNewUsers(users);
+        newUsers.push(new User(userId,inputUserId));
+        console.log(newUsers);
+        s_users(newUsers);
+    };
     useEffect(() => {
         props.setAppbar.leftIcon(
             <IconButton
@@ -94,12 +115,12 @@ export default function NewGroup(props: ISelectUserProps) {
                 value={group_name}
                 onChange={(event)=>{s_group_name(event.target.value)}}
                 />
-                <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} />
-                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>ユーザ追加</Button>
+                <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} onChange={handleChaengeUserIdInput} value={inputUserId}/>
+                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }} disabled={(userId == -1)} onClick={handleUseAdd}>ユーザ追加</Button>
                 <List style={{ marginTop: "20px", width: "100%" }}>
                     {
                         users.map((user: User) => {
-                            return <UserListItem user={user}  handleDeleteItem={()=>{
+                            return <UserListItem key={user.user_id} user={user}  handleDeleteItem={()=>{
                                 console.log(users.filter(u => u != user));
                                 s_users(users.filter(u => u != user));
                             }}/>
