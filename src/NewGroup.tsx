@@ -7,14 +7,6 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from 'react-router-dom';
 
-function CreateNewUsers(oldUsers: User[]): User[] {
-    let newUsers: User[] = [];
-    oldUsers.forEach((user) => {
-        newUsers.push(new User(user.user_id, user.user_name));
-    });
-    return newUsers;
-}
-
 interface IUserListItemProps {
     user: User;
     handleDeleteItem: () => void;
@@ -79,7 +71,7 @@ export default function NewGroup(props: ISelectUserProps) {
 
     };
     const handleUseAdd = () => {
-        const newUsers = CreateNewUsers(users);
+        const newUsers = users.concat();
         newUsers.push(new User(userId, inputUserId));
         console.log(newUsers);
         s_users(newUsers);
