@@ -7,10 +7,12 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from 'react-router-dom';
 
+
 interface IUserListItemProps {
     user: User;
     handleDeleteItem: () => void;
 }
+
 function UserListItem(props: IUserListItemProps) {
 
 
@@ -68,15 +70,38 @@ export default function NewGroup(props: ISelectUserProps) {
                 userId_ = resData.userId;
             });
         s_isDuplicateUsers(users.findIndex(user => user.user_name == event.target.value) != -1);
-
     };
+
     const handleUseAdd = () => {
         const newUsers = users.concat();
         newUsers.push(new User(userId, inputUserId));
+        localStorage.setItem("group_users",JSON.stringify(newUsers))
         console.log(newUsers);
         s_users(newUsers);
         s_isDuplicateUsers(true);
+        s_inputUserId("");
     };
+
+    const handleGroupAdd = async () => {
+        const gn = localStorage.getItem("group_name");
+        const gus_ = localStorage.getItem("group_users");
+        const gus:User[] = JSON.parse(gus_ != null?gus_:"[]");
+        await fetch(`http://127.0.0.1:31354/group?sid=${localStorage.getItem("sid")}`, {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                group_name: gn,
+                users: gus.map((user) => user.user_id)
+            }),
+        })
+            .then(res => res.json())
+            .catch((reason) => { console.log(reason) });
+        history.push("/group_management");
+    };
+
     useEffect(() => {
         props.setAppbar.leftIcon(
             <IconButton
@@ -89,14 +114,13 @@ export default function NewGroup(props: ISelectUserProps) {
                 <CloseIcon />
             </IconButton>
         );
-        //props.setAppbar.centerTitle("");
         props.setAppbar.rightIcon(
             <IconButton
                 edge="end"
                 color="inherit"
                 aria-label="confirm"
                 style={{ flexGrow: 1 }}
-                onClick={() => { history.push("/group_management") }}
+                onClick={handleGroupAdd}
             >
                 <CheckIcon />
             </IconButton>
@@ -104,6 +128,8 @@ export default function NewGroup(props: ISelectUserProps) {
         s_group_name(location.state.group_name);
         s_group_id(location.state.group_id);
         s_users(location.state.group_users);
+        localStorage.setItem("group_name",location.state.group_name);
+        localStorage.setItem("group_users",JSON.stringify(location.state.group_users))
     }, []);
     return (
         <Box style={{ display: "flex", justifyContent: "center", paddingBottom: "70px" }}>
@@ -114,7 +140,7 @@ export default function NewGroup(props: ISelectUserProps) {
                     placeholder="グループ名"
                     required style={{ marginTop: "20px", width: "100%" }}
                     value={group_name}
-                    onChange={(event) => { s_group_name(event.target.value) }}
+                    onChange={(event) => { s_group_name(event.target.value); localStorage.setItem("group_name",event.target.value); }}
                 />
                 <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} onChange={handleChaengeUserIdInput} value={inputUserId} />
                 <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }} disabled={(userId == -1) || isDuplicateUsers} onClick={handleUseAdd}>ユーザ追加</Button>
