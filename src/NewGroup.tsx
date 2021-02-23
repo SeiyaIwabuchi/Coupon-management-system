@@ -7,17 +7,17 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from 'react-router-dom';
 
-function CreateNewUsers(oldUsers:User[]) : User[]{
-    let newUsers:User[] = [];
-    oldUsers.forEach((user)=>{
-        newUsers.push(new User(user.user_id,user.user_name));
+function CreateNewUsers(oldUsers: User[]): User[] {
+    let newUsers: User[] = [];
+    oldUsers.forEach((user) => {
+        newUsers.push(new User(user.user_id, user.user_name));
     });
     return newUsers;
 }
 
 interface IUserListItemProps {
-    user:User;
-    handleDeleteItem:() => void;
+    user: User;
+    handleDeleteItem: () => void;
 }
 function UserListItem(props: IUserListItemProps) {
 
@@ -41,10 +41,10 @@ function UserListItem(props: IUserListItemProps) {
     );
 }
 
-interface ILocation{
-    group_name:string;
-    group_id:number;
-    group_users:User[];
+interface ILocation {
+    group_name: string;
+    group_id: number;
+    group_users: User[];
 }
 
 interface ISelectUserProps {
@@ -59,22 +59,31 @@ interface ISelectUserProps {
 export default function NewGroup(props: ISelectUserProps) {
     const history = useHistory();
     const location = useLocation<ILocation>();
-    const [group_name,s_group_name] = useState("");
-    const [group_id,s_group_id] = useState(-1);
-    const [users,s_users] = useState<User[]>([]);
-    const [inputUserId,s_inputUserId] = useState("");
-    const [userId,s_userId] = useState(-1);
-    const handleChaengeUserIdInput = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
+    const [group_name, s_group_name] = useState("");
+    const [group_id, s_group_id] = useState(-1);
+    const [users, s_users] = useState<User[]>([]);
+    const [inputUserId, s_inputUserId] = useState("");
+    const [userId, s_userId] = useState(-1);
+    const [isDuplicateUsers, s_isDuplicateUsers] = useState(false);
+
+    const handleChaengeUserIdInput = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        let userId_ = -1;
         s_inputUserId(event.target.value);
         await fetch(`http://127.0.0.1:31354/user?sid=${localStorage.getItem("sid")}&login_id=${event.target.value}`)
-        .then(res => res.json())
-        .then((resData) => {console.log(resData);s_userId(resData.userId)})
-    }; 
-    const handleUseAdd = () =>{
+            .then(res => res.json())
+            .then((resData) => {
+                s_userId(resData.userId);
+                userId_ = resData.userId;
+            });
+        s_isDuplicateUsers(users.findIndex(user => user.user_name == event.target.value) != -1);
+
+    };
+    const handleUseAdd = () => {
         const newUsers = CreateNewUsers(users);
-        newUsers.push(new User(userId,inputUserId));
+        newUsers.push(new User(userId, inputUserId));
         console.log(newUsers);
         s_users(newUsers);
+        s_isDuplicateUsers(true);
     };
     useEffect(() => {
         props.setAppbar.leftIcon(
@@ -107,23 +116,23 @@ export default function NewGroup(props: ISelectUserProps) {
     return (
         <Box style={{ display: "flex", justifyContent: "center", paddingBottom: "70px" }}>
             <Box style={{ width: "90vw", display: "flex", flexDirection: "column", alignItems: "center", marginTop: "3vh" }}>
-                <TextField 
-                variant="filled" 
-                label="グループ名" 
-                placeholder="グループ名" 
-                required style={{ marginTop: "20px", width: "100%" }} 
-                value={group_name}
-                onChange={(event)=>{s_group_name(event.target.value)}}
+                <TextField
+                    variant="filled"
+                    label="グループ名"
+                    placeholder="グループ名"
+                    required style={{ marginTop: "20px", width: "100%" }}
+                    value={group_name}
+                    onChange={(event) => { s_group_name(event.target.value) }}
                 />
-                <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} onChange={handleChaengeUserIdInput} value={inputUserId}/>
-                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }} disabled={(userId == -1)} onClick={handleUseAdd}>ユーザ追加</Button>
+                <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} onChange={handleChaengeUserIdInput} value={inputUserId} />
+                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }} disabled={(userId == -1) || isDuplicateUsers} onClick={handleUseAdd}>ユーザ追加</Button>
                 <List style={{ marginTop: "20px", width: "100%" }}>
                     {
                         users.map((user: User) => {
-                            return <UserListItem key={user.user_id} user={user}  handleDeleteItem={()=>{
+                            return <UserListItem key={user.user_id} user={user} handleDeleteItem={() => {
                                 console.log(users.filter(u => u != user));
                                 s_users(users.filter(u => u != user));
-                            }}/>
+                            }} />
                         })
                     }
                 </List>
