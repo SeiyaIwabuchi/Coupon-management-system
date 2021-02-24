@@ -31,7 +31,7 @@ export default function Login(props: ILoginProps) {
         let isLogined = false;
         let isResOk = false;
         //ログイン
-        await fetch("http://localhost:31354/login", {
+        await fetch("http://192.168.1.49:3030/login", {
             method: "POST",
             mode: "cors",
             headers: {

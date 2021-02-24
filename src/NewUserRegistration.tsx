@@ -58,7 +58,7 @@ export default function NewUserRegistration(props: INewUserRegistrationProps) {
                     let isLogined = false;
                     let isResOk = false;
                     //登録
-                    await fetch("http://localhost:3030/user", {
+                    await fetch("http://192.168.1.49:3030/user", {
                         method: "POST",
                         mode: "cors",
                         headers: {
@@ -78,7 +78,7 @@ export default function NewUserRegistration(props: INewUserRegistrationProps) {
                         console.log(reason);
                     });
                     //ログイン
-                    await fetch("http://localhost:3030/login", {
+                    await fetch("http://192.168.1.49:3030/login", {
                         method: "POST",
                         mode: "cors",
                         headers: {
