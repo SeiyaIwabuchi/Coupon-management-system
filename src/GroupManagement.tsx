@@ -8,10 +8,14 @@ import { Link, useHistory } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import dummyUsers from "./data/dummy/users";
 
+interface IfetchedGroupsData {
+    id: number;
+    group_name: string;
+}
 
 interface IGroupListItemProps {
     id: number;
-    name:string;
+    name: string;
     setAppbar: {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
@@ -26,14 +30,14 @@ function GroupListItem(props: IGroupListItemProps) {
 
 
     return (
-        <ListItem button onClick={()=>{
+        <ListItem button onClick={() => {
             props.setAppbar.centerTitle("グループ編集");
             history.push({
-                pathname:"/new_group",
-                state:{
-                    group_id:props.id,
-                    group_name:props.name,
-                    group_users:dummyUsers
+                pathname: "/new_group",
+                state: {
+                    group_id: props.id,
+                    group_name: props.name,
+                    group_users: dummyUsers
                 }
             });
         }}>
@@ -53,6 +57,7 @@ interface IGroupManagementProps {
 
 
 export default function GroupManagement(props: IGroupManagementProps) {
+    const [groups, s_groups] = useState<Group[]>([]);
     const history = useHistory();
     useEffect(() => {
         props.setAppbar.leftIcon(
@@ -68,27 +73,32 @@ export default function GroupManagement(props: IGroupManagementProps) {
         );
         props.setAppbar.centerTitle("グループ管理");
         props.setAppbar.rightIcon(<></>);
+        fetch(`http://127.0.0.1:31354/groups?sid=${localStorage.getItem("sid")}`)
+            .then(res => res.json())
+            .then((res: IfetchedGroupsData[]) => { 
+                s_groups(res.map((group) => ({ id: group.id, name: group.group_name }))) 
+            });
     }, []);
     return (
         <Box style={{ display: "flex", justifyContent: "center", paddingBottom: "70px" }}>
             <Box style={{ width: "90vw", display: "flex", flexDirection: "column", alignItems: "center", marginTop: "3vh" }}>
-            <Fab color="primary" aria-label="add" style={{ position: "fixed", right: 30, bottom: 80 }} onClick={() => { 
-                history.push({
-                    pathname:"/new_group",
-                    state:{
-                        group_id:-1,
-                        group_name:"",
-                        group_users:[]
-                    }
-                }); 
-                props.setAppbar.centerTitle("グループ作成");
+                <Fab color="primary" aria-label="add" style={{ position: "fixed", right: 30, bottom: 80 }} onClick={() => {
+                    history.push({
+                        pathname: "/new_group",
+                        state: {
+                            group_id: -1,
+                            group_name: "",
+                            group_users: []
+                        }
+                    });
+                    props.setAppbar.centerTitle("グループ作成");
                 }}>
-                <AddIcon />
-            </Fab>
+                    <AddIcon />
+                </Fab>
                 <List style={{ marginTop: "20px", width: "100%" }}>
                     {
-                        dummyGroups.map((group:Group) => {
-                            return <GroupListItem id={group.id} name={group.name} setAppbar={props.setAppbar}/>
+                        groups.map((group: Group) => {
+                            return <GroupListItem id={group.id} name={group.name} setAppbar={props.setAppbar} />
                         })
                     }
                 </List>
