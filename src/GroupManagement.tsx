@@ -13,6 +13,14 @@ interface IfetchedGroupsData {
     group_name: string;
 }
 
+interface IfetchedGroupsData2 {
+    group_name: string;
+    users: {
+        user_id:number,
+        user_name:string
+    }[];
+}
+
 interface IGroupListItemProps {
     id: number;
     name: string;
@@ -30,14 +38,20 @@ function GroupListItem(props: IGroupListItemProps) {
 
 
     return (
-        <ListItem button onClick={() => {
+        <ListItem button onClick={async () => {
+            let fetchedGroupsData:IfetchedGroupsData2 = {group_name:"",users:[]};
             props.setAppbar.centerTitle("グループ編集");
+            await fetch(`http://192.168.1.49:3030/group?sid=${localStorage.getItem("sid")}&group_id=${props.id}`)
+            .then(res => res.json())
+            .then((group:IfetchedGroupsData2)=>{
+                fetchedGroupsData = group;
+            });
             history.push({
                 pathname: "/new_group",
                 state: {
                     group_id: props.id,
-                    group_name: props.name,
-                    group_users: dummyUsers
+                    group_name: fetchedGroupsData.group_name,
+                    group_users: fetchedGroupsData.users
                 }
             });
         }}>
@@ -73,10 +87,11 @@ export default function GroupManagement(props: IGroupManagementProps) {
         );
         props.setAppbar.centerTitle("グループ管理");
         props.setAppbar.rightIcon(<></>);
-        fetch(`http://127.0.0.1:31354/groups?sid=${localStorage.getItem("sid")}`)
+        fetch(`http://192.168.1.49:3030/groups?sid=${localStorage.getItem("sid")}`)
             .then(res => res.json())
             .then((res: IfetchedGroupsData[]) => { 
-                s_groups(res.map((group) => ({ id: group.id, name: group.group_name }))) 
+                s_groups(res.map((group) => ({ id: group.id, name: group.group_name })));
+                console.log(res);
             });
     }, []);
     return (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Checkbox, IconButton, Link, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Checkbox, IconButton, Link, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, Snackbar, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import User from "./data/model/User";
@@ -60,10 +60,26 @@ export default function NewGroup(props: ISelectUserProps) {
     const [userId, s_userId] = useState(-1);
     const [isDuplicateUsers, s_isDuplicateUsers] = useState(false);
 
+
+    const handleDeleteGroup = async () => {
+        await await fetch(`http://192.168.1.49:3030/group?sid=${localStorage.getItem("sid")}`, {
+            method: "DELETE",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                group_id: group_id
+            }),
+        })
+            .catch((reason) => { console.log(reason) });
+        history.push("/group_management");
+    };
+
     const handleChaengeUserIdInput = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let userId_ = -1;
         s_inputUserId(event.target.value);
-        await fetch(`http://127.0.0.1:31354/user?sid=${localStorage.getItem("sid")}&login_id=${event.target.value}`)
+        await fetch(`http://192.168.1.49:3030/user?sid=${localStorage.getItem("sid")}&login_id=${event.target.value}`)
             .then(res => res.json())
             .then((resData) => {
                 s_userId(resData.userId);
@@ -75,7 +91,7 @@ export default function NewGroup(props: ISelectUserProps) {
     const handleUseAdd = () => {
         const newUsers = users.concat();
         newUsers.push(new User(userId, inputUserId));
-        localStorage.setItem("group_users",JSON.stringify(newUsers))
+        localStorage.setItem("group_users", JSON.stringify(newUsers))
         console.log(newUsers);
         s_users(newUsers);
         s_isDuplicateUsers(true);
@@ -85,21 +101,23 @@ export default function NewGroup(props: ISelectUserProps) {
     const handleGroupAdd = async () => {
         const gn = localStorage.getItem("group_name");
         const gus_ = localStorage.getItem("group_users");
-        const gus:User[] = JSON.parse(gus_ != null?gus_:"[]");
-        await fetch(`http://127.0.0.1:31354/group?sid=${localStorage.getItem("sid")}`, {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                group_name: gn,
-                users: gus.map((user) => user.user_id)
-            }),
-        })
-            .then(res => res.json())
-            .catch((reason) => { console.log(reason) });
-        history.push("/group_management");
+        const gus: User[] = JSON.parse(gus_ != null ? gus_ : "[]");
+        if (gn?.length != 0 && gus.length != 0) {
+            await fetch(`http://192.168.1.49:3030/group?sid=${localStorage.getItem("sid")}`, {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    group_name: gn,
+                    users: gus.map((user) => user.user_id)
+                }),
+            })
+                .then(res => res.json())
+                .catch((reason) => { console.log(reason) });
+            history.push("/group_management");
+        }
     };
 
     useEffect(() => {
@@ -128,8 +146,9 @@ export default function NewGroup(props: ISelectUserProps) {
         s_group_name(location.state.group_name);
         s_group_id(location.state.group_id);
         s_users(location.state.group_users);
-        localStorage.setItem("group_name",location.state.group_name);
-        localStorage.setItem("group_users",JSON.stringify(location.state.group_users))
+        localStorage.setItem("group_name", location.state.group_name);
+        localStorage.setItem("group_users", JSON.stringify(location.state.group_users));
+        console.log(location.state.group_id);
     }, []);
     return (
         <Box style={{ display: "flex", justifyContent: "center", paddingBottom: "70px" }}>
@@ -138,9 +157,10 @@ export default function NewGroup(props: ISelectUserProps) {
                     variant="filled"
                     label="グループ名"
                     placeholder="グループ名"
-                    required style={{ marginTop: "20px", width: "100%" }}
+                    required
+                    style={{ marginTop: "20px", width: "100%" }}
                     value={group_name}
-                    onChange={(event) => { s_group_name(event.target.value); localStorage.setItem("group_name",event.target.value); }}
+                    onChange={(event) => { s_group_name(event.target.value); localStorage.setItem("group_name", event.target.value); }}
                 />
                 <TextField variant="filled" label="ユーザID" placeholder="ユーザID" style={{ marginTop: "20px", width: "100%" }} onChange={handleChaengeUserIdInput} value={inputUserId} />
                 <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }} disabled={(userId == -1) || isDuplicateUsers} onClick={handleUseAdd}>ユーザ追加</Button>
@@ -154,7 +174,7 @@ export default function NewGroup(props: ISelectUserProps) {
                         })
                     }
                 </List>
-                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }}>グループ削除</Button>
+                <Button color="primary" variant="contained" style={{ marginTop: "20px", width: "100%" }} onClick={handleDeleteGroup}>グループ削除</Button>
             </Box>
         </Box>
     );
