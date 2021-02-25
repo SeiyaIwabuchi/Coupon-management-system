@@ -39,6 +39,7 @@ interface ILocation {
     group_name: string;
     group_id: number;
     group_users: User[];
+    mode:string;
 }
 
 interface ISelectUserProps {
@@ -59,6 +60,7 @@ export default function NewGroup(props: ISelectUserProps) {
     const [inputUserId, s_inputUserId] = useState("");
     const [userId, s_userId] = useState(-1);
     const [isDuplicateUsers, s_isDuplicateUsers] = useState(false);
+    const [mode,s_mode] = useState("create");
 
 
     const handleDeleteGroup = async () => {
@@ -99,17 +101,20 @@ export default function NewGroup(props: ISelectUserProps) {
     };
 
     const handleGroupAdd = async () => {
+        const gid = localStorage.getItem("group_id");
         const gn = localStorage.getItem("group_name");
         const gus_ = localStorage.getItem("group_users");
+        const mode = localStorage.getItem("mode");
         const gus: User[] = JSON.parse(gus_ != null ? gus_ : "[]");
         if (gn?.length != 0 && gus.length != 0) {
             await fetch(`http://192.168.1.49:3030/group?sid=${localStorage.getItem("sid")}`, {
-                method: "POST",
+                method: (mode=="create"?"post":"put"),
                 mode: "cors",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    id:gid,
                     group_name: gn,
                     users: gus.map((user) => user.user_id)
                 }),
@@ -146,9 +151,11 @@ export default function NewGroup(props: ISelectUserProps) {
         s_group_name(location.state.group_name);
         s_group_id(location.state.group_id);
         s_users(location.state.group_users);
+        s_mode(location.state.mode);
         localStorage.setItem("group_name", location.state.group_name);
         localStorage.setItem("group_users", JSON.stringify(location.state.group_users));
-        console.log(location.state.group_id);
+        localStorage.setItem("group_id",`${location.state.group_id}`);
+        localStorage.setItem("mode",location.state.mode);
     }, []);
     return (
         <Box style={{ display: "flex", justifyContent: "center", paddingBottom: "70px" }}>
@@ -168,8 +175,10 @@ export default function NewGroup(props: ISelectUserProps) {
                     {
                         users.map((user: User) => {
                             return <UserListItem key={user.user_id} user={user} handleDeleteItem={() => {
-                                console.log(users.filter(u => u != user));
-                                s_users(users.filter(u => u != user));
+                                let new_users = users.filter(u => u != user);
+                                console.log(new_users);
+                                s_users(new_users);
+                                localStorage.setItem("group_users", JSON.stringify(new_users));
                             }} />
                         })
                     }
