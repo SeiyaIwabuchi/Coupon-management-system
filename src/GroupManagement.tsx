@@ -51,7 +51,8 @@ function GroupListItem(props: IGroupListItemProps) {
                 state: {
                     group_id: props.id,
                     group_name: fetchedGroupsData.group_name,
-                    group_users: fetchedGroupsData.users
+                    group_users: fetchedGroupsData.users,
+                    mode:"update"
                 }
             });
         }}>
@@ -103,7 +104,8 @@ export default function GroupManagement(props: IGroupManagementProps) {
                         state: {
                             group_id: -1,
                             group_name: "",
-                            group_users: []
+                            group_users: [],
+                            mode:"create"
                         }
                     });
                     props.setAppbar.centerTitle("グループ作成");
