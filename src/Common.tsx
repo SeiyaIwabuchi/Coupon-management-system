@@ -1,7 +1,7 @@
 
-import { AppBar, Toolbar, IconButton, Typography, Button, Box, BottomNavigation, BottomNavigationAction } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Typography, Button, Box, BottomNavigation, BottomNavigationAction, CircularProgress } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import CreateIcon from '@material-ui/icons/Create';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -17,7 +17,8 @@ import Statistics from "./Statistics";
 import NewUserRegistration from "./NewUserRegistration";
 import NewGroup from "./NewGroup";
 import GroupManagement from "./GroupManagement";
-
+import path from "./path";
+import Loading from "./Loading";
 
 //親要素から受け取るプロパティ
 interface ICommonProps {
@@ -35,15 +36,24 @@ export default function Common(props: ICommonProps) {
             <MenuIcon />
         </IconButton>
     );
-    const [centerLabel, setcenterLabel] = useState("たいぽぐらふぃ");
+    const [centerLabel, setcenterLabel] = useState("");
     const [rightIconButton, setrightIconButton] = useState(<Button color="inherit" style={{ flexGrow: 1 }}>Login</Button>);
+    const [isLoading,s_isLoading] = useState(false);
 
+    let setAppbar = { 
+        leftIcon: setleftIconButton, 
+        centerTitle: setcenterLabel, 
+        rightIcon: setrightIconButton ,
+        handleSetLoading:s_isLoading
+    };
 
-    let setAppbar = { leftIcon: setleftIconButton, centerTitle: setcenterLabel, rightIcon: setrightIconButton };
-
+    useEffect(() => {
+        console.log(path.path);
+    });
 
     return (
         <Box>
+            <Loading isShow={isLoading}/>
             <AppBar position="fixed" >
                 <Toolbar style={{ display: "flex", flexDirection: "row" }}>
                     {leftIconButton}
@@ -55,37 +65,37 @@ export default function Common(props: ICommonProps) {
             </AppBar>
             <Box style={{ marginTop: "56px", height: window.innerHeight - (58 * 2.1) }}>
                 <Switch>
-                    <Route exact path="/">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/login" /> : <Redirect to="/Coupon" />}
+                    <Route exact path={`${path.path}/`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to= {`${path.path}/login`} /> : <Redirect to={`${path.path}/coupon`} />}
                     </Route>
-                    <Route path="/coupon">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Coupon setAppbar={setAppbar} />}
+                    <Route path={`${path.path}/coupon`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <Coupon setAppbar={setAppbar} />}
                     </Route>
-                    <Route path="/created">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Created setAppbar={setAppbar} />}
+                    <Route path={`${path.path}/created`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <Created setAppbar={setAppbar} />}
                     </Route>
-                    <Route path="/settings">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Settings setAppbar={setAppbar} />}
+                    <Route path={`${path.path}/settings`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <Settings setAppbar={setAppbar} />}
                     </Route>
-                    <Route path="/createnew">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <CreateNew setAppbar={setAppbar} />}
+                    <Route path={`${path.path}/createnew`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <CreateNew setAppbar={setAppbar} />}
                     </Route>
-                    <Route path="/login">
+                    <Route path={`${path.path}/login`}>
                         <Login setAppbar={setAppbar}/>
                     </Route>
-                    <Route path="/selectdest">
-                    {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <SelectDest setAppbar={setAppbar}/>}
+                    <Route path={`${path.path}/selectdest`}>
+                    {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <SelectDest setAppbar={setAppbar}/>}
                     </Route>
-                    <Route path="/statistics">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <Statistics setAppbar={setAppbar}/>}
+                    <Route path={`${path.path}/statistics`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <Statistics setAppbar={setAppbar}/>}
                     </Route>
-                    <Route path="/new_group">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <NewGroup setAppbar={setAppbar}/>}
+                    <Route path={`${path.path}/new_group`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <NewGroup setAppbar={setAppbar}/>}
                     </Route>
-                    <Route path="/group_management">
-                        {localStorage.getItem("sid") == null ? <Redirect to="/Login" /> : <GroupManagement setAppbar={setAppbar}/>}
+                    <Route path={`${path.path}/group_management`}>
+                        {localStorage.getItem("sid") == null ? <Redirect to={`${path.path}/login`} /> : <GroupManagement setAppbar={setAppbar}/>}
                     </Route>
-                    <Route path="/user_registration">
+                    <Route path={`${path.path}/user_registration`}>
                         <NewUserRegistration setAppbar={setAppbar}/>
                     </Route>
                     <Route path="*">
@@ -106,9 +116,9 @@ export default function Common(props: ICommonProps) {
                     zIndex:9999
                 }}
             >
-                <BottomNavigationAction label="クーポン" icon={<ConfirmationNumberIcon />} value={"/coupon"} component={Link} to={"/coupon"} />
-                <BottomNavigationAction label="発行" icon={<CreateIcon />} value={"/created"} component={Link} to={"/created"} />
-                <BottomNavigationAction label="設定" icon={<SettingsIcon />} value={"/settings"} component={Link} to={"/settings"} />
+                <BottomNavigationAction label="クーポン" icon={<ConfirmationNumberIcon />} value={`${path.path}/coupon`} component={Link} to={`${path.path}/coupon`} />
+                <BottomNavigationAction label="発行" icon={<CreateIcon />} value={`${path.path}/created`} component={Link} to={`${path.path}/created`} />
+                <BottomNavigationAction label="設定" icon={<SettingsIcon />} value={`${path.path}/settings`} component={Link} to={`${path.path}/settings`} />
             </BottomNavigation>
         </Box>
     );

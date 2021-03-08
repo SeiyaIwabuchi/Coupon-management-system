@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Box, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import path from "./path";
 
 
 interface IStatListItem {
@@ -25,6 +26,7 @@ interface IStatisticsProps {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
         rightIcon: (icon: JSX.Element) => void;
+        handleSetLoading:(b:boolean) => void;
     };
 }
 
@@ -41,7 +43,7 @@ export default function Statistics(props: IStatisticsProps) {
                 color="inherit"
                 aria-label="goback"
                 component={Link}
-                to="/created"
+                to={`${path.path}/created`}
             >
                 <ArrowBackIcon />
             </IconButton>

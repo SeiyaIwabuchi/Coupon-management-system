@@ -1,6 +1,7 @@
 import { Typography, Box, TextField, Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import path from "./path";
 
 
 interface IFetchedData{
@@ -14,6 +15,7 @@ interface INewUserRegistrationProps {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
         rightIcon: (icon: JSX.Element) => void;
+        handleSetLoading:(b:boolean) => void;
     };
 }
 
@@ -58,7 +60,7 @@ export default function NewUserRegistration(props: INewUserRegistrationProps) {
                     let isLogined = false;
                     let isResOk = false;
                     //登録
-                    await fetch("http://192.168.1.49:3030/user", {
+                    await fetch(`${path.apiServerUrl}/user`, {
                         method: "POST",
                         mode: "cors",
                         headers: {
@@ -78,7 +80,7 @@ export default function NewUserRegistration(props: INewUserRegistrationProps) {
                         console.log(reason);
                     });
                     //ログイン
-                    await fetch("http://192.168.1.49:3030/login", {
+                    await fetch(`${path.apiServerUrl}/login`, {
                         method: "POST",
                         mode: "cors",
                         headers: {
@@ -99,7 +101,7 @@ export default function NewUserRegistration(props: INewUserRegistrationProps) {
                     .catch((reason)=>{
                         console.log(reason);
                     });
-                    if(isLogined) history.push("/coupon");
+                    if(isLogined) history.push(`${path.path}/coupon`);
                 }}>登録</Button>
                 <div style={{ flexGrow: 1 }} />
             </Box>

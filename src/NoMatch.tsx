@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import path from "./path";
 
 
 interface INoMatchProps {
@@ -8,6 +9,7 @@ interface INoMatchProps {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
         rightIcon: (icon: JSX.Element) => void;
+        handleSetLoading:(b:boolean) => void;
     };
 }
 
@@ -24,7 +26,7 @@ export default function NoMatch(props: INoMatchProps) {
                 <Typography>
                     存在しないページへアクセスしようとしました。
             </Typography>
-                <Button component={Link} to={"/created"} color="primary" variant="contained" style={{marginTop:"20px"}}>
+                <Button onClick={()=>{window.location.href = "/app/"}} color="primary" variant="contained" style={{marginTop:"20px"}}>
                     ログイン
             </Button>
             </Box>

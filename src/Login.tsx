@@ -1,6 +1,7 @@
 import { Typography, Box, TextField, Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import path from "./path";
 
 
 interface IFetchedData {
@@ -12,6 +13,7 @@ interface ILoginProps {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
         rightIcon: (icon: JSX.Element) => void;
+        handleSetLoading:(b:boolean) => void;
     };
 }
 
@@ -31,7 +33,7 @@ export default function Login(props: ILoginProps) {
         let isLogined = false;
         let isResOk = false;
         //ログイン
-        await fetch("http://192.168.1.49:3030/login", {
+        await fetch(`${path.apiServerUrl}/login`, {
             method: "POST",
             mode: "cors",
             headers: {
@@ -52,7 +54,7 @@ export default function Login(props: ILoginProps) {
             .catch((reason) => {
                 console.log(reason);
             });
-        if (isLogined) history.push("/coupon");
+        if (isLogined) history.push(`${path.path}/coupon`);
     };
 
 
@@ -83,7 +85,7 @@ export default function Login(props: ILoginProps) {
                 <TextField value={passwd} onChange={event => { sPasswd(event.target.value) }} variant="filled" placeholder="パスワード" label="パスワード" type="password" style={{ flexGrow: 2 }} />
                 <Button onClick={loginButtonHandle} variant="contained" color="primary">ログイン</Button>
                 <div style={{ flexGrow: 1 }} />
-                <Button variant="contained" color="primary" component={Link} to="/user_registration">新規登録</Button>
+                <Button variant="contained" color="primary" component={Link} to={`${path.path}/user_registration`}>新規登録</Button>
                 <div style={{ flexGrow: 1 }} />
             </Box>
         </Box>

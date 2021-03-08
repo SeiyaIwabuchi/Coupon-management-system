@@ -7,7 +7,8 @@ interface IMyDialogProps{
     titleText:string;
     contentText:string;
     confDiagOpen:boolean;
-    sconfDiagOpen:(open:boolean) => void;
+    handleOk:(open:boolean) => void;
+    handleCancel:(open:boolean) => void;
     disagreeButtonText:string;
     agreeButtonText:string;
 }
@@ -21,7 +22,7 @@ export default function MyDialog(props:IMyDialogProps) {
     return (
             <Dialog
                 open={props.confDiagOpen}
-                onClose={()=>{props.sconfDiagOpen(false)}}
+                onClose={()=>{props.handleCancel(false)}}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -35,8 +36,8 @@ export default function MyDialog(props:IMyDialogProps) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={()=>{props.sconfDiagOpen(false);}} color="primary">{props.agreeButtonText}</Button>
-                    <Button onClick={()=>{props.sconfDiagOpen(false);}} color="primary" autoFocus>{props.disagreeButtonText}</Button>
+                    <Button onClick={()=>{props.handleOk(false);}} color="primary">{props.agreeButtonText}</Button>
+                    <Button onClick={()=>{props.handleCancel(false);}} color="primary" autoFocus>{props.disagreeButtonText}</Button>
                 </DialogActions>
             </Dialog>
     );

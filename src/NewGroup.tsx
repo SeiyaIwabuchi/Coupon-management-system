@@ -6,6 +6,7 @@ import User from "./data/model/User";
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from 'react-router-dom';
+import path from "./path";
 
 
 interface IUserListItemProps {
@@ -47,6 +48,7 @@ interface ISelectUserProps {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
         rightIcon: (icon: JSX.Element) => void;
+        handleSetLoading:(b:boolean) => void;
     };
 }
 
@@ -64,7 +66,7 @@ export default function NewGroup(props: ISelectUserProps) {
 
 
     const handleDeleteGroup = async () => {
-        await await fetch(`http://192.168.1.49:3030/group?sid=${localStorage.getItem("sid")}`, {
+        await await fetch(`${path.apiServerUrl}/group?sid=${localStorage.getItem("sid")}`, {
             method: "DELETE",
             mode: "cors",
             headers: {
@@ -75,13 +77,13 @@ export default function NewGroup(props: ISelectUserProps) {
             }),
         })
             .catch((reason) => { console.log(reason) });
-        history.push("/group_management");
+        history.push(`${path.path}/group_management`);
     };
 
     const handleChaengeUserIdInput = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let userId_ = -1;
         s_inputUserId(event.target.value);
-        await fetch(`http://192.168.1.49:3030/user?sid=${localStorage.getItem("sid")}&login_id=${event.target.value}`)
+        await fetch(`${path.apiServerUrl}/user?sid=${localStorage.getItem("sid")}&login_id=${event.target.value}`)
             .then(res => res.json())
             .then((resData) => {
                 s_userId(resData.userId);
@@ -107,7 +109,7 @@ export default function NewGroup(props: ISelectUserProps) {
         const mode = localStorage.getItem("mode");
         const gus: User[] = JSON.parse(gus_ != null ? gus_ : "[]");
         if (gn?.length != 0 && gus.length != 0) {
-            await fetch(`http://192.168.1.49:3030/group?sid=${localStorage.getItem("sid")}`, {
+            await fetch(`${path.apiServerUrl}/group?sid=${localStorage.getItem("sid")}`, {
                 method: (mode=="create"?"post":"put"),
                 mode: "cors",
                 headers: {
@@ -121,7 +123,7 @@ export default function NewGroup(props: ISelectUserProps) {
             })
                 .then(res => res.json())
                 .catch((reason) => { console.log(reason) });
-            history.push("/group_management");
+            history.push(`${path.path}/group_management`);
         }
     };
 
@@ -132,7 +134,7 @@ export default function NewGroup(props: ISelectUserProps) {
                 color="inherit"
                 aria-label="goback"
                 style={{ flexGrow: 1 }}
-                onClick={() => { history.replace("/group_management") }}
+                onClick={() => { history.replace(`${path.path}/group_management`) }}
             >
                 <CloseIcon />
             </IconButton>

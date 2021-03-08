@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "rm -rf ../back_nodejs/reactApp/*; react-scripts build; touch build/`date | sed -e 's/ /-/g'`; cp -rf build ../back_nodejs/reactApp/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

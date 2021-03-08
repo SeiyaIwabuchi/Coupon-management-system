@@ -29,7 +29,7 @@ interface ICouponCard {
 	avatar: string;
 	image: string;
 	message: string;
-	hash: string;
+	hash: number;
 	leftIcon:JSX.Element;
 	rightIcon:JSX.Element;
 }
