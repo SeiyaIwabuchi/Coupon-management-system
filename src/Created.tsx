@@ -13,7 +13,7 @@ interface ICreatedProps {
         leftIcon: (icon: JSX.Element) => void,
         centerTitle: (title: string) => void;
         rightIcon: (icon: JSX.Element) => void;
-        handleSetLoading:(b:boolean) => void;
+        handleSetLoading: (b: boolean) => void;
     };
 }
 
@@ -51,7 +51,7 @@ export default function Created(props: ICreatedProps) {
                 message={props.message}
                 hash={props.hash}
                 leftIcon={
-                    <IconButton aria-label="use" onClick={() => { history.push(`${path.path}/createnew`,{state:{gift_id:props.hash}}); }}>
+                    <IconButton aria-label="use" onClick={() => { history.push(`${path.path}/createnew`, { state: { gift_id: props.hash } }); }}>
                         <CreateIcon />
                     </IconButton>
                 }
@@ -64,17 +64,19 @@ export default function Created(props: ICreatedProps) {
         );
     }
 
-    const CreateCouponList = async (props: { giftDataObj: IGiftData[] }) => {
-        console.log(props.giftDataObj);
+    const CreateCouponList = async (props_: { giftDataObj: IGiftData[] }) => {
+        console.log(props_.giftDataObj);
         const list: JSX.Element[] = [];
         let imageUrl = "";
-        for (let i = 0; i < props.giftDataObj.length; i++) {
-            let gift = props.giftDataObj[i];
+        for (let i = 0; i < props_.giftDataObj.length; i++) {
+            props.setAppbar.handleSetLoading(true);
+            let gift = props_.giftDataObj[i];
             await fetch(`${path.apiServerUrl}/gift_image?sid=${localStorage.getItem("sid")}&image_id=${gift.image_id}`)
                 .then(res => res.blob())
                 .then(res => {
                     imageUrl = URL.createObjectURL(res);
                 });
+            props.setAppbar.handleSetLoading(false);
             const expDate = new Date(gift.expiration_date);
             list.push(
                 CreateCouponCard({

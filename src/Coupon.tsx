@@ -131,17 +131,18 @@ export default function Coupon(props: ICouponProps) {
     };
 
     const refreshCards = () => {
-        props.setAppbar.handleSetLoading(true);
         fetch(`${path.apiServerUrl}/gifts_distributed?sid=${localStorage.getItem("sid")}`)
             .then(res => res.json())
             .then(async (res: IGiftData[]) => {
                 let res_: IGiftData[] = res.slice();
                 for (let i = 0; i < res_.length; i++) {
+                    props.setAppbar.handleSetLoading(true);
                     await fetch(`${path.apiServerUrl}/usage_gift?sid=${localStorage.getItem("sid")}&gift_id=${res_[i].gift_id}`)
                         .then(res__ => res__.json())
                         .then((res__: { count: number }) => {
                             res_[i].available_times -= res__.count;
                         });
+                    props.setAppbar.handleSetLoading(false);
                 }
                 let res__ = res_.filter(gift => gift.available_times > 0); //残り回数でフィルタ
                 const date = new Date();
@@ -155,7 +156,6 @@ export default function Coupon(props: ICouponProps) {
                 }
                 res__ = res__.filter(gift => deletedGifts.indexOf(gift.gift_id) == -1); //削除済みでフィルタ
                 CreateCouponList({ giftDataObj: res__ });
-                props.setAppbar.handleSetLoading(false);
             });
     };
 
